@@ -41,7 +41,12 @@ const userSchema = new mongoose.Schema({
   },
   passwordChangedAt: Date,
   passwordResetToken: String,
-  passwordResetTokenExpires: Date
+  passwordResetTokenExpires: Date,
+  active: {
+    type: Boolean,
+    default: true,
+    select: false
+  }
 });
 
 //MIDDLEWARE
@@ -53,11 +58,11 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
-// userSchema.pre('save', function(next) {
-//   if (!this.isModified('password') || this.isNew()) return next();
-//   this.passwordChangedAt = Date.now() - 1000;
-//   next();
-// });
+userSchema.pre('save', function(next) {
+  if (!this.isModified('password') || this.isNew) return next();
+  this.passwordChangedAt = Date.now() - 1000;
+  next();
+});
 
 userSchema.methods.correctPassword = async function(
   candidatePassword,
