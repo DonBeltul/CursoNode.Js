@@ -18,9 +18,11 @@ const connectDb = async () => {
 
     // Aquí sincronizo los índices de todos los modelos
     const models = Object.values(mongoose.models);
-    for (const model of models) {
-      await model.syncIndexes(); // esta operación puede ser costosa, es aconsejable realizarlo solo una vez, en el inicio de la aplicacion
-    }
+
+    await Promise.all(models.map(model => model.syncIndexes()));
+    // for (const model of models) {
+    //   await model.syncIndexes(); // esta operación puede ser costosa, es aconsejable realizarlo solo una vez, en el inicio de la aplicacion
+    // }
   } catch (err) {
     console.error(err);
     process.exit(1);
