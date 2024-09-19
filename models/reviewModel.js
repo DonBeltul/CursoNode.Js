@@ -23,8 +23,14 @@ const reviewSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User',
     required: [true, 'Review must belong a user']
-  }
-});
+  },
+},
+{
+  toJson: {virtuals: true},
+  toObject: {virtuals: true}
+}
+
+);
 
 reviewSchema.pre(/^find/, function(next) {
   this.populate({
